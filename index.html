@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10 Besar Hasil Ujian ATS - Kelas 4, 5, 6</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #f0f0f0;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1024px) { .columns { grid-template-columns: 1fr; } }
+
+        .column {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-header {
+            padding: 15px;
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .kelas-4 .column-header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .kelas-5 .column-header { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .kelas-6 .column-header { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85em; }
+        thead { background: #f8f9fa; }
+        th {
+            padding: 10px 6px;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+        td {
+            padding: 8px 6px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            color: #444;
+        }
+        tbody tr:hover { background: #f0f7ff; }
+        tbody tr:nth-child(even) { background: #fafafa; }
+
+        .rank-1 { background: #fff9c4 !important; font-weight: bold; }
+        .rank-2 { background: #f5f5f5 !important; }
+        .rank-3 { background: #ffe0b2 !important; }
+
+        .loading { text-align: center; padding: 30px; color: #888; font-style: italic; }
+        .error { text-align: center; padding: 20px; color: #d32f2f; font-size: 0.9em; }
+        .empty { text-align: center; padding: 20px; color: #999; font-style: italic; }
+
+        .badge-no {
+            display: inline-block;
+            width: 22px; height: 22px; line-height: 22px;
+            border-radius: 50%;
+            background: #667eea; color: #fff;
+            font-size: 0.75em; font-weight: bold;
+        }
+        .rank-1 .badge-no { background: #ffc107; color: #333; }
+        .rank-2 .badge-no { background: #9e9e9e; }
+        .rank-3 .badge-no { background: #ff9800; }
+
+        .nilai { font-weight: bold; color: #2e7d32; }
+
+        .stats {
+            text-align: center; color: #fff;
+            margin-top: 20px; font-size: 0.9em; opacity: 0.9;
+        }
+
+        .btn-refresh {
+            display: block; margin: 20px auto 0;
+            padding: 10px 24px;
+            background: #fff; color: #667eea;
+            border: none; border-radius: 8px;
+            font-weight: bold; cursor: pointer;
+            font-size: 0.9em;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: 0.2s;
+        }
+        .btn-refresh:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="container">
+	<h1>SDN GAMBIRONO 01</h1>
+        <h1>🏆 Daftar 10 Besar Hasil Ujian ATS</h1>
+        <p class="subtitle">Tahun Pelajaran 2026/2027 - Total Nilai Akhir </p>
+
+        <div class="columns">
+            <div class="column kelas-4">
+                <div class="column-header">📚 KELAS 4</div>
+                <table>
+                    <thead>
+                        <tr><th>No</th><th>Nama</th><th>Kelas</th><th>Total Nilai Akhir</th></tr>
+                    </thead>
+                    <tbody id="tbody-kelas4">
+                        <tr><td colspan="4" class="loading">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="column kelas-5">
+                <div class="column-header">📖 KELAS 5</div>
+                <table>
+                    <thead>
+                        <tr><th>No</th><th>Nama</th><th>Kelas</th><th>Total Nilai Akhir</th></tr>
+                    </thead>
+                    <tbody id="tbody-kelas5">
+                        <tr><td colspan="4" class="loading">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="column kelas-6">
+                <div class="column-header">🎓 KELAS 6</div>
+                <table>
+                    <thead>
+                        <tr><th>No</th><th>Nama</th><th>Kelas</th><th>Total Nilai Akhir</th></tr>
+                    </thead>
+                    <tbody id="tbody-kelas6">
+                        <tr><td colspan="4" class="loading">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <p class="stats" id="stats">Memuat data dari 3 database Firebase...</p>
+        <button class="btn-refresh" onclick="loadAllData()">🔄 Refresh Data</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // =====================================================
+        // KONFIGURASI FIREBASE
+        // =====================================================
+        const firebaseConfigKelas4 = {
+            apiKey: "AIzaSyAKOiBKj25rCgLDhSPEkQ4CzggMIQ7CWdo",
+            authDomain: "asat-kls-4.firebaseapp.com",
+            projectId: "asat-kls-4",
+            storageBucket: "asat-kls-4.firebasestorage.app",
+            messagingSenderId: "772081856533",
+            appId: "1:772081856533:web:d07e1ec41ac97660001e1c"
+        };
+        const firebaseConfigKelas5 = {
+            apiKey: "AIzaSyD9XT8pSNqOykugsb7Cv5rO-BNOcCh4440",
+            authDomain: "ats-kelas-5.firebaseapp.com",
+            projectId: "ats-kelas-5",
+            storageBucket: "ats-kelas-5.firebasestorage.app",
+            messagingSenderId: "548455920485",
+            appId: "1:548455920485:web:4fa898fb5d31c2b102a78c"
+        };
+        const firebaseConfigKelas6 = {
+            apiKey: "AIzaSyC2p0rMRZO8-oeElmDupoSMesAqox4d4_o",
+            authDomain: "ats-kelas-6.firebaseapp.com",
+            projectId: "ats-kelas-6",
+            storageBucket: "ats-kelas-6.firebasestorage.app",
+            messagingSenderId: "480741142678",
+            appId: "1:480741142678:web:1cee92b3f95459faacd2b7"
+        };
+
+        const app4 = firebase.initializeApp(firebaseConfigKelas4, 'kelas4');
+        const app5 = firebase.initializeApp(firebaseConfigKelas5, 'kelas5');
+        const app6 = firebase.initializeApp(firebaseConfigKelas6, 'kelas6');
+
+        const db4 = firebase.firestore(app4);
+        const db5 = firebase.firestore(app5);
+        const db6 = firebase.firestore(app6);
+
+        // =====================================================
+        // KONFIGURASI FILTER
+        // =====================================================
+
+        // Mapel yang di-exclude
+        const EXCLUDED_MAPEL = [
+            'uji coba', 'ujicoba', 'uji-coba', 'uji_coba',
+            'try out', 'tryout', 'try-out',
+            'tes', 'test', 'testing',
+            'latihan', 'remedial', 'percobaan', 'simulasi'
+        ];
+
+        function isExcludedMapel(nama) {
+            if (!nama) return false;
+            const n = String(nama).toLowerCase().trim();
+            return EXCLUDED_MAPEL.some(ex => n.includes(ex));
+        }
+
+        // =====================================================
+        // HELPER
+        // =====================================================
+        function pickNumber(obj, keys, def = 0) {
+            for (const k of keys) {
+                if (obj && obj[k] !== undefined && obj[k] !== null) {
+                    const n = Number(obj[k]);
+                    if (!isNaN(n)) return n;
+                }
+            }
+            return def;
+        }
+
+        function pickString(obj, keys, def = '') {
+            for (const k of keys) {
+                if (obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== '') {
+                    return String(obj[k]);
+                }
+            }
+            return def;
+        }
+
+        function normalizeName(n) {
+            return String(n || '').toLowerCase().replace(/\s+/g, ' ').trim();
+        }
+
+        function getNamaMapel(a) {
+            return pickString(a, [
+                'mapel', 'mataPelajaran', 'mata_pelajaran', 'subject',
+                'namaMapel', 'nama_mapel', 'pelajaran', 'examName', 'exam_name',
+                'title', 'judul', 'kategori', 'mapelId', 'mapel_id',
+                'examId', 'exam_id', 'ujianId', 'ujian_id'
+            ], '');
+        }
+
+        /**
+         * Hitung nilai akhir 1 mapel
+         */
+        function hitungNilaiSatuMapel(a) {
+            // Prioritas 1: field nilai langsung
+            const nilaiLangsung = pickNumber(a,
+                ['nilai', 'nilaiAkhir', 'nilai_akhir', 'totalNilai', 'total_nilai', 'finalScore'],
+                null);
+            if (nilaiLangsung !== null && nilaiLangsung > 0) {
+                return nilaiLangsung;
+            }
+
+            // Prioritas 2: hitung manual
+            const nilaiPGK = pickNumber(a, ['nilaiPGK', 'nilai_pgk', 'nilaiPgk'], 0);
+            const nilaiPG  = pickNumber(a, ['nilaiPG', 'nilai_pg', 'nilaiPg'], 0);
+            const nilaiBS  = pickNumber(a, ['nilaiBS', 'nilai_bs', 'nilaiBs'], 0);
+            const totalPGK = pickNumber(a, ['totalPGK', 'total_pgk', 'totalPgk'], 0);
+            const totalPG  = pickNumber(a, ['totalPG', 'total_pg', 'totalPg'], 0);
+            const totalBS  = pickNumber(a, ['totalBS', 'total_bs', 'totalBs'], 0);
+            const totalSoal = totalPGK + totalPG + totalBS;
+
+            if (totalSoal > 0) {
+                return Math.round(((nilaiPGK + nilaiPG + nilaiBS) / totalSoal) * 100 * 100) / 100;
+            }
+
+            return pickNumber(a, ['score', 'poin', 'points'], 0);
+        }
+
+        /**
+         * Buat KEY unik untuk deteksi duplikat.
+         * Kombinasi: userId + mapel (atau examId kalau tidak ada mapel)
+         */
+        function buatKeyDuplikat(userId, a) {
+            const mapel = getNamaMapel(a);
+            const examId = pickString(a, ['examId', 'exam_id', 'ujianId', 'ujian_id', 'idUjian'], '');
+            // Kalau ada examId → pakai examId (lebih presisi)
+            if (examId) {
+                return `${userId}::exam::${examId}`;
+            }
+            // Kalau ada mapel → pakai mapel
+            if (mapel) {
+                return `${userId}::mapel::${mapel.toLowerCase().trim()}`;
+            }
+            // Fallback: pakai docId (tidak akan ter-deduplikasi)
+            return `${userId}::unique::${Math.random()}`;
+        }
+
+        // =====================================================
+        // FETCH DATA DENGAN DEDUPLIKASI
+        // =====================================================
+        async function fetchDataFromDb(db, label) {
+            try {
+                // 1. Ambil users
+                const usersSnap = await db.collection('users').get();
+                const usersById = {}, usersByName = {}, usersByEmail = {};
+
+                usersSnap.forEach(doc => {
+                    const data = doc.data();
+                    const nama = pickString(data, ['nama', 'name', 'username', 'displayName', 'fullName', 'full_name'], 'Tanpa Nama');
+                    const kelas = pickString(data, ['kelas', 'class', 'kelasId', 'grade', 'tingkat'], '-');
+                    const email = pickString(data, ['email', 'userEmail'], '');
+
+                    const u = { id: doc.id, nama, kelas, email, ...data };
+                    usersById[doc.id] = u;
+                    usersByName[normalizeName(nama)] = u;
+                    if (email) usersByEmail[email.toLowerCase()] = u;
+                });
+
+                // 2. Ambil semua answers
+                const answersSnap = await db.collection('answers').get();
+                if (answersSnap.empty) return [];
+
+                console.log(`[${label}] Total dokumen answers: ${answersSnap.size}`);
+
+                // 3. Proses setiap dokumen → cari userId, mapel, nilai
+                const semua = [];
+                let skippedUjiCoba = 0;
+
+                answersSnap.forEach(doc => {
+                    const a = doc.data();
+
+                    // Skip Uji Coba
+                    const mapel = getNamaMapel(a);
+                    if (isExcludedMapel(mapel)) {
+                        skippedUjiCoba++;
+                        return;
+                    }
+
+                    // Cari userId
+                    let userId = null;
+                    const cand = [a.userId, a.user_id, a.user, a.studentId, a.student_id, a.uid, a.idUser, a.siswaId];
+                    for (const c of cand) {
+                        if (c && usersById[c]) { userId = c; break; }
+                    }
+                    if (!userId) {
+                        const email = pickString(a, ['userEmail', 'email', 'user_email'], '');
+                        if (email && usersByEmail[email.toLowerCase()]) {
+                            userId = usersByEmail[email.toLowerCase()].id;
+                        }
+                    }
+                    if (!userId) {
+                        const nama = pickString(a, ['userName', 'nama', 'name', 'studentName'], '');
+                        const nn = normalizeName(nama);
+                        if (nn && usersByName[nn]) userId = usersByName[nn].id;
+                    }
+                    if (!userId) {
+                        const fb = pickString(a, ['userId', 'user', 'studentId', 'uid', 'userName', 'nama'], null);
+                        if (!fb) return;
+                        userId = '__auto__' + fb;
+                        if (!usersById[userId]) {
+                            usersById[userId] = {
+                                id: userId,
+                                nama: pickString(a, ['userName', 'nama', 'name', 'studentName'], 'Tanpa Nama'),
+                                kelas: pickString(a, ['kelas', 'class', 'tingkat'], '-')
+                            };
+                        }
+                    }
+
+                    // Ambil nilai & timestamp (untuk pilih yang terbaru kalau duplikat)
+                    const nilai = hitungNilaiSatuMapel(a);
+                    const ts = a.updatedAt || a.createdAt || a.timestamp || a.waktu || a.date || null;
+                    const tsNum = ts
+                        ? (ts.seconds !== undefined ? ts.seconds * 1000 : new Date(ts).getTime() || 0)
+                        : 0;
+
+                    semua.push({
+                        userId,
+                        docId: doc.id,
+                        mapel,
+                        nilai,
+                        tsNum,
+                        key: buatKeyDuplikat(userId, a),
+                        raw: a
+                    });
+                });
+
+                console.log(`[${label}] Setelah exclude Uji Coba: ${semua.length} (skip ${skippedUjiCoba})`);
+
+                // =====================================================
+                // 4. DEDUPLIKASI
+                // Aturan: 1 user + 1 mapel = 1 dokumen
+                // Yang diambil: nilai tertinggi, atau yang terbaru
+                // =====================================================
+                const dedup = {}; // { key: { userId, mapel, nilai, tsNum, ... } }
+                let jumlahDuplikat = 0;
+
+                semua.forEach(item => {
+                    const existing = dedup[item.key];
+                    if (!existing) {
+                        dedup[item.key] = item;
+                    } else {
+                        jumlahDuplikat++;
+                        // Pilih: timestamp terbaru → nilai tertinggi → docId
+                        if (item.tsNum > existing.tsNum) {
+                            dedup[item.key] = item;
+                        } else if (item.tsNum === existing.tsNum && item.nilai > existing.nilai) {
+                            dedup[item.key] = item;
+                        }
+                    }
+                });
+
+                console.log(`[${label}] Duplikat ditemukan: ${jumlahDuplikat}, setelah dedup: ${Object.keys(dedup).length}`);
+
+                // 5. Akumulasi nilai per user (setelah dedup)
+                const nilaiPerUser = {};
+                const detailPerUser = {};
+
+                Object.values(dedup).forEach(item => {
+                    if (!nilaiPerUser[item.userId]) {
+                        nilaiPerUser[item.userId] = 0;
+                        detailPerUser[item.userId] = [];
+                    }
+                    nilaiPerUser[item.userId] += item.nilai;
+                    detailPerUser[item.userId].push(`${item.mapel || '?'}=${item.nilai}`);
+                });
+
+                // 6. Susun hasil
+                const hasil = [];
+                Object.keys(nilaiPerUser).forEach(userId => {
+                    const user = usersById[userId];
+                    if (!user) return;
+                    hasil.push({
+                        nama: user.nama,
+                        kelas: user.kelas,
+                        totalNilai: Math.round(nilaiPerUser[userId] * 100) / 100,
+                        jumlahMapel: detailPerUser[userId].length,
+                        detail: detailPerUser[userId].join(', ')
+                    });
+                });
+
+                // 7. Sort
+                hasil.sort((a, b) => {
+                    if (b.totalNilai !== a.totalNilai) return b.totalNilai - a.totalNilai;
+                    return a.nama.localeCompare(b.nama, 'id', { sensitivity: 'base' });
+                });
+
+                if (hasil.length > 0) {
+                    console.log(`[${label}] Top 3 setelah dedup:`, hasil.slice(0, 3));
+                }
+
+                return hasil.slice(0, 10);
+
+            } catch (error) {
+                console.error(`[${label}] Error:`, error);
+                throw error;
+            }
+        }
+
+        function renderTable(tbodyId, data, label) {
+            const tbody = document.getElementById(tbodyId);
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="empty">Belum ada data nilai untuk ${label}</td></tr>`;
+                return;
+            }
+
+            let html = '';
+            data.forEach((item, index) => {
+                const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+                const nilaiTampil = Number.isInteger(item.totalNilai) ? item.totalNilai : item.totalNilai.toFixed(2);
+                html += `
+                    <tr class="${rankClass}" title="Mapel (${item.jumlahMapel}): ${escapeHtml(item.detail || '')}">
+                        <td><span class="badge-no">${index + 1}</span></td>
+                        <td style="text-align:left; padding-left:10px;">${escapeHtml(item.nama)}</td>
+                        <td>${escapeHtml(String(item.kelas))}</td>
+                        <td class="nilai">${nilaiTampil}</td>
+                    </tr>
+                `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        function escapeHtml(t) {
+            const d = document.createElement('div');
+            d.textContent = t;
+            return d.innerHTML;
+        }
+
+        async function loadAllData() {
+            const statsEl = document.getElementById('stats');
+            statsEl.textContent = '⏳ Memuat data dari 3 database Firebase...';
+
+            ['kelas4', 'kelas5', 'kelas6'].forEach(k => {
+                document.getElementById(`tbody-${k}`).innerHTML =
+                    `<tr><td colspan="4" class="loading">Memuat data...</td></tr>`;
+            });
+
+            try {
+                const [data4, data5, data6] = await Promise.all([
+                    fetchDataFromDb(db4, 'Kelas 4').catch(err => { console.error('Gagal Kelas 4:', err); return null; }),
+                    fetchDataFromDb(db5, 'Kelas 5').catch(err => { console.error('Gagal Kelas 5:', err); return null; }),
+                    fetchDataFromDb(db6, 'Kelas 6').catch(err => { console.error('Gagal Kelas 6:', err); return null; })
+                ]);
+
+                if (data4 === null) {
+                    document.getElementById('tbody-kelas4').innerHTML =
+                        `<tr><td colspan="4" class="error">⚠️ Gagal memuat data Kelas 4<br><small>Cek Console (F12)</small></td></tr>`;
+                } else renderTable('tbody-kelas4', data4, 'Kelas 4');
+
+                if (data5 === null) {
+                    document.getElementById('tbody-kelas5').innerHTML =
+                        `<tr><td colspan="4" class="error">⚠️ Gagal memuat data Kelas 5<br><small>Cek Console (F12)</small></td></tr>`;
+                } else renderTable('tbody-kelas5', data5, 'Kelas 5');
+
+                if (data6 === null) {
+                    document.getElementById('tbody-kelas6').innerHTML =
+                        `<tr><td colspan="4" class="error">⚠️ Gagal memuat data Kelas 6<br><small>Cek Console (F12)</small></td></tr>`;
+                } else renderTable('tbody-kelas6', data6, 'Kelas 6');
+
+                const c4 = data4 ? data4.length : 0;
+                const c5 = data5 ? data5.length : 0;
+                const c6 = data6 ? data6.length : 0;
+                statsEl.textContent = `✅ Data dimuat — Kelas 4: ${c4} siswa | Kelas 5: ${c5} siswa | Kelas 6: ${c6} siswa`;
+
+            } catch (error) {
+                console.error('Error umum:', error);
+                statsEl.textContent = '❌ Terjadi kesalahan saat memuat data';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAllData);
+    </script>
+</body>
+</html>
